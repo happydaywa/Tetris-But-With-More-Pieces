@@ -26,9 +26,40 @@ void DrawBoard() {
         putchar(Board[i]);
     }
 }
+int ny = 0;
+int nx = 0;
+
+void ApplyGravity() {
+    for (int i = 0; i < ROWS * COLUMNS; i++) {
+        if (Board[i] == '%') {
+            ny = i / COLUMNS;
+            nx = i % COLUMNS;
+            ny += 1;
+            Board[i] = ' ';
+        }
+    }
+}
+
+void MovePiece() {
+    Board[ny*COLUMNS + nx] = '%';
+}
+
+void FillTestPiece() {
+    Board[2*COLUMNS + 5] = '%';
+}
 
 int main() {
     FillBoard();
-    DrawBoard();
+    FillTestPiece();
+
+    while (1) {
+        ApplyGravity();
+        printf("Before movepiece called: %d, %d", nx, ny);
+        MovePiece();
+        
+        DrawBoard();
+        usleep(1000000);
+    }
+    
     return 0;
 }
