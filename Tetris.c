@@ -8,6 +8,11 @@
 
 char Board[COLUMNS * ROWS];
 
+// W = Border Wall
+// E = Empty Cell
+// A = Active Cell
+// S = Settled Cell
+
 void FillBoard() {
     for (int x = 0; x < COLUMNS; x++) {
         for (int y = 0; y < ROWS; y++) {
@@ -23,7 +28,7 @@ void FillBoard() {
 void DrawBoard() {
     for (int i = 0; i < ROWS * COLUMNS; i++) {
         if (i % COLUMNS == 0) putchar('\n');
-        if (Board[i] == 'A') {
+        if (Board[i] == 'A' || Board[i] == 'S') {
             putchar('%');
         }
         else if (Board[i] == 'W') {
@@ -49,7 +54,11 @@ void ApplyGravity() {
 }
 
 void MovePiece() {
-    Board[ny*COLUMNS + nx] = 'A';
+    if (Board[ny*COLUMNS + nx] == 'E' ||  Board[ny*COLUMNS + nx] == 'A') {
+        Board[ny*COLUMNS + nx] = 'A';
+    } else {
+        Board[(ny-1)*COLUMNS + (nx)] = 'A';
+    }
 }
 
 void FillTestPiece() {
@@ -62,7 +71,6 @@ int main() {
 
     while (1) {
         ApplyGravity();
-        printf("Before movepiece called: %d, %d", nx, ny);
         MovePiece();
         
         DrawBoard();
