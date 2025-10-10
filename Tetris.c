@@ -19,7 +19,6 @@ void FillBoard() {
 }
 
 void DrawBoard() {
-    printf("\033[H\033[J"); // clear terminal
     for (int i = 0; i < ROWS * COLUMNS; i++) {
         if (i % COLUMNS == 0) putchar('\n');
         char c = Board[i];
@@ -38,40 +37,41 @@ void FillTestPiece() {
     Board[3*COLUMNS + 5] = 'A';
     Board[3*COLUMNS + 6] = 'A';
     Board[1*COLUMNS + 6] = 'A';
-    Board[1*COLUMNS + 1] = 'A';
 }
 
-int MoveDown() {
-    int canMove = 1;
 
-    for (int y = ROWS - 2; y >= 1; y--) {
-        for (int x = 1; x < COLUMNS - 1; x++) {
-            if (Board[y*COLUMNS + x] == 'A') {
-                char below = Board[(y+1)*COLUMNS + x];
-                if (below == 'W' || below == 'S')
-                    canMove = 0;
+void MoveDown() {
+    int CanMove = 1;
+
+    for (int y = 0; y < ROWS; y++) {
+        for (int x = 0; x < COLUMNS; x++) {
+            if (Board[y*COLUMNS+x] == 'A') {
+                char Below = Board[(y+1)*COLUMNS+x];
+                printf("%c", Below);
+                if (Below == 'W' || Below == 'S') {
+                    CanMove = 0;
+                }
             }
+        }
+    }   
+
+    if (!CanMove) {
+        for (int i = 0; ROWS*COLUMNS; i++) {
+            if (Board[i] == 'A') {
+                Board[i] == 'S';
+            } 
         }
     }
 
-    if (!canMove) {
-        for (int i = 0; i < ROWS * COLUMNS; i++)
-            if (Board[i] == 'A')
-                Board[i] = 'S';
-        return 0;
-    }
-
-    for (int y = ROWS - 2; y >= 1; y--) {
-        for (int x = 1; x < COLUMNS - 1; x++) {
-            if (Board[y*COLUMNS + x] == 'A') {
-                Board[(y+1)*COLUMNS + x] = 'A';
-                Board[y*COLUMNS + x] = 'E';
+    for (int y = ROWS; y > 0; y--) {
+        for (int x = COLUMNS; x > 0; x--) {
+            if (Board[y*COLUMNS+x] == 'A') {
+                Board[(y+1)*COLUMNS+x] = 'A';
+                Board[y*COLUMNS+x] = 'E';
             }
         }
-    }
-    return 1;
+    }   
 }
-
 int main() {
     FillBoard();
     FillTestPiece();
