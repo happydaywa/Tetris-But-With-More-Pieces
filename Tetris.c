@@ -23,8 +23,8 @@ void DrawBoard() {
         if (i % COLUMNS == 0) putchar('\n');
         char c = Board[i];
         switch (c) {
-            case 'A': putchar('%'); break;
-            case 'S': putchar('%'); break;
+            case 'A': putchar('A'); break;
+            case 'S': putchar('S'); break;
             case 'W': putchar('#'); break;
             default:  putchar(' '); break;
         }
@@ -32,15 +32,8 @@ void DrawBoard() {
     fflush(stdout);
 }
 
-void FillTestPiece() {
-    Board[2*COLUMNS + 6] = 'A';
-    Board[3*COLUMNS + 5] = 'A';
-    Board[3*COLUMNS + 6] = 'A';
-    Board[1*COLUMNS + 6] = 'A';
-}
 
-
-void MoveDown() {
+int MoveDown() {
     int CanMove = 1;
 
     for (int y = 0; y < ROWS; y++) {
@@ -56,11 +49,12 @@ void MoveDown() {
     }   
 
     if (!CanMove) {
-        for (int i = 0; ROWS*COLUMNS; i++) {
+        for (int i = 0; i < ROWS*COLUMNS; i++) {
             if (Board[i] == 'A') {
-                Board[i] == 'S';
+                Board[i] = 'S';
             } 
         }
+        return 0;
     }
 
     for (int y = ROWS; y > 0; y--) {
@@ -70,15 +64,26 @@ void MoveDown() {
                 Board[y*COLUMNS+x] = 'E';
             }
         }
-    }   
+    }
+    return 1;
 }
+
+void BuildPiece() {
+    Board[2*COLUMNS + 6] = 'A';
+    Board[3*COLUMNS + 5] = 'A';
+    Board[3*COLUMNS + 6] = 'A';
+    Board[1*COLUMNS + 6] = 'A';
+}
+
 int main() {
     FillBoard();
-    FillTestPiece();
 
     while (1) {
         DrawBoard();
-        MoveDown();
+        if (!MoveDown()) {
+            BuildPiece();
+        }
+        
         usleep(300000);
     }
 
